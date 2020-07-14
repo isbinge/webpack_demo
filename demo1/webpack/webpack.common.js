@@ -1,28 +1,28 @@
-const path = require('path')
+const path = require('path');
 
-const appSourcePath = path.resolve(process.cwd(),'src');
-const appDistPath = path.resolve(process.cwd(),'dist')
+const appSourcePath = path.resolve(process.cwd(), 'src');
+const appDistPath = path.resolve(process.cwd(), 'dist');
 
 module.exports = {
-    entry:{
-        main: appSourcePath
+  entry: {
+    main: appSourcePath,
+  },
+  output: {
+    path: appDistPath,
+    filename: '[name].[hash].js',
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
     },
-    output:{
-        path: appDistPath,
-        filename: '[name].[contenthash].js'
+    runtimeChunk: 'single',
+    moduleIds: 'hashed',
+  },
+  resolve: {
+    modules: [appSourcePath, 'node_modules'],
+    extensions: ['.tsx', '.ts', '.js', '.ejs'],
+    alias: {
+      '@': appSourcePath,
     },
-    optimization:{
-        splitChunks:{
-            chunks:'all'
-        },
-        runtimeChunk:'single',
-        moduleIds:'deterministic'
-    },
-    resolve:{
-        modules:[appSourcePath,'node_modules'],
-        extensions:['.tsx','.ts','.js','.ejs'],
-        alias:{
-            "@":appSourcePath
-        }
-    }
-}
+  },
+};

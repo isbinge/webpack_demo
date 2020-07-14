@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --open --config ./webpack/webpack.dev.js"
+    "start": "webpack-dev-server --open --config ./webpack/webpack.dev.js",
+    "build": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.prod.js",
+    "build:analyze": "cross-env NODE_ENV=production OPEN_ANALYZER=true webpack --config ./webpack/webpack.prod.js"
   },
   "author": "",
   "config": {
@@ -24,12 +26,14 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.3",
     "html-webpack-plugin": "^4.3.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "node-sass": "^4.14.1",
     "prettier": "^2.0.5",
     "sass-loader": "^9.0.2",
     "style-loader": "^1.2.1",
     "ts-loader": "^8.0.0",
     "typescript": "^3.9.6",
-    "webpack": "^5.0.0-beta.21",
+    "webpack": "v4.43.0",
     "webpack-bundle-analyzer": "^3.8.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
@@ -38,6 +42,9 @@
   "dependencies": {
     "lodash": "^4.17.19",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
+    "react-router": "^5.2.0",
+    "redux": "^4.0.5"
   }
 }

@@ -24,7 +24,6 @@ module.exports = {
     quotes: ['error', 'single'],
     'max-len': ['warn', { tabWidth: 4, code: 100 }],
     'no-undef': 'error',
-    'no-console': 'warn',
   },
   overrides: [
     {
