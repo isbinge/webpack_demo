@@ -10,10 +10,18 @@ module.exports = {
   output: {
     path: appDistPath,
     filename: '[name].[hash].js',
+    chunkFilename: '[id].bundle.js',
   },
   optimization: {
     splitChunks: {
-      chunks: 'all',
+      cacheGroups: {
+        styles: {
+          name: 'styles',
+          test: /\.test/,
+          chunks: 'all',
+          enforce: true,
+        },
+      },
     },
     runtimeChunk: 'single',
     moduleIds: 'hashed',

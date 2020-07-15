@@ -23,6 +23,7 @@ module.exports = merge(common, {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
+              esModule: true,
               publicPath: './',
               hmr: process.env.NODE_ENV === 'development',
               reloadAll: true,
