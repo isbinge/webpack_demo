@@ -16,10 +16,11 @@ module.exports = {
     splitChunks: {
       cacheGroups: {
         styles: {
-          name: 'styles',
-          test: /\.test/,
+          name: false,
+          test: /\.(sc|sa|c)ss$/,
           chunks: 'all',
           enforce: true,
+          automaticNamePrefix: 'sass-style',
         },
       },
     },
