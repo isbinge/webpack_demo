@@ -33,10 +33,12 @@ module.exports = {
       },
     },
   ],
-
   settings: {
     react: {
       version: 'detect',
     },
+  },
+  globals: {
+    HELLO: 'writable',
   },
 };

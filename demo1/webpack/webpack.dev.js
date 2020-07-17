@@ -8,13 +8,23 @@ const webpack = require('webpack');
 
 module.exports = merge(common, {
   mode: 'development',
-  devtool: 'inline-source-map',
+  devtool: 'cheap-module-eval-source-map',
+  optimization: {
+    removeAvailableModules: false,
+    removeEmptyChunks: false,
+    splitChunks: false,
+    runtimeChunk: 'single',
+  },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         loader: 'ts-loader',
+        options: {
+          transpileOnly: true,
+          experimentalWatchApi: true,
+        },
       },
       {
         test: /\.(sc|sa|c)ss$/,
@@ -24,8 +34,7 @@ module.exports = merge(common, {
             loader: MiniCssExtractPlugin.loader,
             options: {
               esModule: true,
-              publicPath: './',
-              hmr: process.env.NODE_ENV === 'development',
+              hmr: false,
               reloadAll: true,
             },
           },
@@ -33,6 +42,9 @@ module.exports = merge(common, {
             loader: 'css-loader',
             options: {
               sourceMap: true,
+              modules: {
+                localIdentName: '[folder]_[local]_[hash:4]',
+              },
             },
           },
           {
@@ -43,10 +55,21 @@ module.exports = merge(common, {
           },
         ],
       },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 25000,
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'webpack demo1',
@@ -54,7 +77,7 @@ module.exports = merge(common, {
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
-      chunkFilename: '[id].css',
+      chunkFilename: '[id].[contenthash:6].contenthash.css',
     }),
   ],
   devServer: {
