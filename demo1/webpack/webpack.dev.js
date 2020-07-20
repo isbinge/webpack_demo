@@ -4,7 +4,7 @@ const common = require('./webpack.common');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const webpack = require('webpack');
+// const webpack = require('webpack');
 
 module.exports = merge(common, {
   mode: 'development',
@@ -31,10 +31,11 @@ module.exports = merge(common, {
         include: path.resolve(process.cwd(), 'src'),
         use: [
           {
+            // loader: 'style-loader',
             loader: MiniCssExtractPlugin.loader,
             options: {
-              esModule: true,
-              hmr: false,
+              // esModule: true,
+              hmr: true,
               reloadAll: true,
             },
           },
@@ -43,7 +44,7 @@ module.exports = merge(common, {
             options: {
               sourceMap: true,
               modules: {
-                localIdentName: '[folder]_[local]_[hash:4]',
+                localIdentName: '[folder]_[local]_[hash:5]',
               },
             },
           },
@@ -62,6 +63,7 @@ module.exports = merge(common, {
             loader: 'url-loader',
             options: {
               limit: 25000,
+              name: 'static/images/[name].[hash:5].[ext]',
             },
           },
         ],
@@ -76,13 +78,17 @@ module.exports = merge(common, {
       template: './src/template.ejs',
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].[contenthash:6].contenthash.css',
+      filename: 'static/css/[name].css',
+      chunkFilename: 'static/css/[id].[contenthash:6].contenthash.css',
     }),
   ],
   devServer: {
+    stats: 'errors-only',
     contentBase: path.resolve(process.cwd(), 'dist'),
     port: process.env.npm_package_config_port,
+    proxy: {
+      '/api': 'http://localhost:8080',
+    },
     hot: true,
   },
 });

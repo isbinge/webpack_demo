@@ -21,8 +21,7 @@ module.exports = {
     path: appDistPath,
     filename: '[name].[hash:6].hash.js',
     chunkFilename: '[id].[contenthash:6].contenthash.js',
-    publicPath: '',
-    // publicPath: 'http://localhost:8080/dist/',
+    publicPath: '/',
   },
   resolve: {
     modules: [appSourcePath, 'node_modules'],
