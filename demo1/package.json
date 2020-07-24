@@ -15,7 +15,20 @@
     "port": "8080"
   },
   "license": "ISC",
+  "browserslist": {
+    "development": [
+      "last 1 chrome version"
+    ],
+    "production": [
+      "> 1%",
+      "not ie > 0",
+      "not edge < 79",
+      "not dead"
+    ]
+  },
   "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/preset-react": "^7.10.4",
     "@types/react": "^16.9.42",
     "@types/react-dom": "^16.9.8",
     "@typescript-eslint/eslint-plugin": "^3.6.0",
@@ -53,7 +66,9 @@
     "webpack-merge": "^5.0.9"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.10.4",
     "antd": "^4.4.2",
+    "babel-loader": "^8.1.0",
     "lodash": "^4.17.19",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

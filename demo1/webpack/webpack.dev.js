@@ -19,12 +19,23 @@ module.exports = merge(common, {
     rules: [
       {
         test: /\.tsx?$/,
-        exclude: /node_modules/,
-        loader: 'ts-loader',
-        options: {
-          transpileOnly: true,
-          experimentalWatchApi: true,
-        },
+        include: path.resolve(process.cwd(), 'src'),
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              cacheCompression: false,
+            },
+          },
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+              experimentalWatchApi: true,
+            },
+          },
+        ],
       },
       {
         test: /\.(sc|sa|c)ss$/,
