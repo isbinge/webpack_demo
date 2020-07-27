@@ -18,7 +18,7 @@ module.exports = merge([
   parts.loadCSS({
     test: /\.(sc|sa|c)ss$/,
     include: path.resolve(parts.appDirectory, 'src'),
-    miniCssLoaderOptions: {
+    miniCssExtractConfig: {
       hmr: true,
       reloadAll: true,
     },

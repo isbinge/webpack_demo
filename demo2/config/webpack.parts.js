@@ -5,6 +5,11 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const PurgecssPlugin = require('purgecss-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const cssnano = require('cssnano');
 
 const dotEnv = require('dotenv');
 
@@ -62,6 +67,22 @@ exports.loadTypeScript = ({ include, exclude, options }) => ({
     ],
   },
 });
+exports.minifyJavaScript = () => ({
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        parallel: 4,
+        terserOptions: {
+          output: {
+            comments: false,
+            beautify: false,
+          },
+        },
+        extractComments: false,
+      }),
+    ],
+  },
+});
 exports.loadImages = ({ include, exclude, options, use = [] }) => ({
   module: {
     rules: [
@@ -88,11 +109,11 @@ exports.loadCSS = ({
   include,
   exclude,
   miniCssLoaderOptions,
-  miniCssConfig,
+  miniCssExtractConfig,
   cssLoaderOptions,
   use = [],
 }) => {
-  const plugin = new MiniCssExtractPlugin(miniCssConfig);
+  const plugin = new MiniCssExtractPlugin(miniCssExtractConfig);
 
   const defaultLoaders = [{ loader: 'css-loader', options: cssLoaderOptions }].concat(use);
   return {
@@ -149,6 +170,16 @@ exports.purgeCSS = (options) => {
     plugins: [new PurgecssPlugin(options)],
   };
 };
+exports.minifyCSS = ({ options }) => ({
+  plugins: [
+    new OptimizeCSSAssetsPlugin({
+      assetNameRegExp: /\*.css$/g,
+      cssProcessor: cssnano,
+      cssProcessorPluginOptions: options,
+      canPrint: false,
+    }),
+  ],
+});
 exports.clean = () => ({
   plugins: [new CleanWebpackPlugin()],
 });
@@ -167,6 +198,17 @@ exports.generateSourceMap = (type) => ({
   devtool: type,
 });
 
+exports.analyzeBundle = () => ({
+  plugins: [new BundleAnalyzerPlugin()],
+});
+
+exports.attachRevisions = () => ({
+  plugins: [
+    new webpack.BannerPlugin({
+      banner: new GitRevisionPlugin().version(),
+    }),
+  ],
+});
 exports.setFreeVariable = (key, value) => {
   const env = {};
   env[key] = JSON.stringify(value);
