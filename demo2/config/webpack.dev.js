@@ -2,9 +2,17 @@ const path = require('path');
 const glob = require('glob');
 const { merge } = require('webpack-merge');
 const parts = require('./webpack.parts');
+const common = require('./webpack.common');
 
 module.exports = merge([
-  { mode: 'development' },
+  common,
+  {
+    mode: 'development',
+    node: false,
+    // externals: {
+    //   react: 'react',
+    // },
+  },
   parts.generateSourceMap('cheap-module-eval-source-map'),
   parts.loadTypeScript({
     include: path.resolve(parts.appDirectory, 'src'),
@@ -49,5 +57,6 @@ module.exports = merge([
     title: 'demo2',
     filename: 'index.html',
   }),
+  parts.useDll(),
   parts.clean(),
 ]);

@@ -42,31 +42,48 @@ exports.page = ({
     }),
   ],
 });
-
-exports.loadTypeScript = ({ include, exclude, options }) => ({
-  module: {
-    rules: [
-      // {
-      //   loader: 'inspect-loader',
-      //   options: {
-      //     callback(inspect) {
-      //       console.log('start to inspect loader flow');
-      //       console.log(inspect.arguments);
-      //       console.log(inspect.context);
-      //       console.log(inspect.options);
-      //     },
-      //   },
-      // },
-      {
-        test: /\.tsx?$/,
-        include,
-        exclude,
-        use: 'ts-loader',
-        options,
-      },
-    ],
-  },
-});
+exports.dontParse = ({ name, path }) => {
+  const alias = {};
+  alias[name] = path;
+  return {
+    module: {
+      noParse: [new RegExp(path)],
+    },
+    resolve: {
+      alias,
+    },
+  };
+};
+exports.loadTypeScript = ({ include, exclude, options, use = [] }) => {
+  const tsLoader = {
+    loader: 'ts-loader',
+    options,
+  };
+  const loaders = process.env.NODE_ENV === 'production' ? [...use, tsLoader] : [tsLoader];
+  return {
+    module: {
+      rules: [
+        // {
+        //   loader: 'inspect-loader',
+        //   options: {
+        //     callback(inspect) {
+        //       console.log('start to inspect loader flow');
+        //       console.log(inspect.arguments);
+        //       console.log(inspect.context);
+        //       console.log(inspect.options);
+        //     },
+        //   },
+        // },
+        {
+          test: /\.tsx?$/,
+          include,
+          exclude,
+          use: loaders,
+        },
+      ],
+    },
+  };
+};
 exports.minifyJavaScript = () => ({
   optimization: {
     minimizer: [
@@ -214,5 +231,23 @@ exports.setFreeVariable = (key, value) => {
   env[key] = JSON.stringify(value);
   return {
     plugins: [new webpack.DefinePlugin(env)],
+  };
+};
+
+exports.useDll = () => {
+  const dllPath = path.resolve(process.cwd(), 'dll', 'manifest.json');
+  if (!fs.existsSync(dllPath)) {
+    console.error(`Can't find file manifest.json`);
+    return [];
+  }
+  console.log(dllPath);
+  return {
+    plugins: [
+      new webpack.DllReferencePlugin({
+        context: path.resolve(process.cwd(), 'dll'),
+        manifest: require(dllPath),
+        // sourceType: 'var',
+      }),
+    ],
   };
 };

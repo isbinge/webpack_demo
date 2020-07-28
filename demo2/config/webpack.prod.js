@@ -1,13 +1,15 @@
 const path = require('path');
-const glob = require('glob');
+// const glob = require('glob');
 const { merge } = require('webpack-merge');
 const parts = require('./webpack.parts');
+const common = require('./webpack.common');
 
 const shouldOpenDevServer = process.env.OPEN_SERVER;
 const openAnalyzer = process.env.OPEN_ANAL;
 console.log(openAnalyzer, '-----------------------------');
 module.exports = merge(
   [
+    common,
     {
       mode: 'production',
       optimization: {
@@ -23,14 +25,23 @@ module.exports = merge(
           maxSize: 25000,
         },
         runtimeChunk: {
-          name: 'manifest',
+          name: 'runtime.[name].js',
         },
         moduleIds: 'hashed',
       },
+      node: false,
     },
     parts.generateSourceMap(false),
     parts.loadTypeScript({
       include: path.resolve(parts.appDirectory, 'src'),
+      use: [
+        {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+          },
+        },
+      ],
     }),
     parts.minifyJavaScript(),
     parts.loadImages({
@@ -93,7 +104,7 @@ module.exports = merge(
 
     parts.page({
       output: {
-        publicPath: `http://${process.env.host}:${process.env.port}/`,
+        publicPath: `/webpack_demo/`,
       },
       title: 'demo2-build',
       filename: 'index.html',
@@ -110,7 +121,7 @@ module.exports = merge(
         },
       },
     }),
-
+    // parts.useDll(),
     parts.setFreeVariable('author', 'isbinge'),
     parts.attachRevisions(),
     parts.clean(),
@@ -120,5 +131,5 @@ module.exports = merge(
         ? parts.devServer({ host: process.env.host, port: process.env.port })
         : [],
     )
-    .concat(openAnalyzer ? parts.analyzeBundle() : []),
+    .concat(openAnalyzer ? [parts.analyzeBundle()] : []),
 );
