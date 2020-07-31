@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon -w ./config/webpack.dev.js -x \"cross-env NODE_ENV=development webpack-dev-server --config ./config/webpack.dev.js\"",
+    "start": "nodemon -w ./config/webpack.dev.js -x \"cross-env NODE_ENV=development webpack-dev-server --config ./config/webpack.dev.js --progress\"",
     "start:file": "webpack --config ./config/webpack.dev.js",
-    "build-dll": "webpack --config ./config/webpack.dll.config.js",
+    "build:dll": "webpack --config ./config/webpack.dll.config.js",
     "build:server": "cross-env NODE_ENV=production webpack-dev-server --config ./config/webpack.prod.js",
     "build": "webpack --config ./config/webpack.prod.js",
-    "postinstall": "yarn build-dll",
+    "postinstall": "yarn build:dll",
     "deploy": "gh-pages -d dist"
   },
   "keywords": [],
@@ -73,11 +73,13 @@
     "webpack-bundle-analyzer": "^3.8.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^5.0.9"
+    "webpack-merge": "^5.0.9",
+    "webpackbar": "^4.0.0"
   },
   "dependencies": {
     "lodash": "^4.17.19",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-hot-loader": "^4.12.21"
   }
 }

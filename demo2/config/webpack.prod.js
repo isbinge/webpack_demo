@@ -25,10 +25,11 @@ module.exports = merge(
           maxSize: 25000,
         },
         runtimeChunk: {
-          name: 'runtime.[name].js',
+          name: (entrypoint) => `runtime~${entrypoint.name}`,
         },
         moduleIds: 'hashed',
       },
+
       node: false,
     },
     parts.generateSourceMap(false),
@@ -104,7 +105,8 @@ module.exports = merge(
 
     parts.page({
       output: {
-        publicPath: `/webpack_demo/`,
+        path: path.resolve(parts.appDirectory, 'dist'),
+        publicPath: `/`,
       },
       title: 'demo2-build',
       filename: 'index.html',
@@ -125,11 +127,8 @@ module.exports = merge(
     parts.setFreeVariable('author', 'isbinge'),
     parts.attachRevisions(),
     parts.clean(),
-  ]
-    .concat(
-      shouldOpenDevServer
-        ? parts.devServer({ host: process.env.host, port: process.env.port })
-        : [],
-    )
-    .concat(openAnalyzer ? [parts.analyzeBundle()] : []),
+  ].concat(
+    shouldOpenDevServer ? parts.devServer({ host: process.env.host, port: process.env.port }) : [],
+  ),
+  // .concat(openAnalyzer ? [parts.analyzeBundle()] : []),
 );

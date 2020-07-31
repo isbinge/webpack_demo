@@ -9,6 +9,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const WebpackBar = require('webpackbar');
 const cssnano = require('cssnano');
 
 const dotEnv = require('dotenv');
@@ -251,3 +252,7 @@ exports.useDll = () => {
     ],
   };
 };
+
+exports.enableProgressBar = () => ({
+  plugins: [new WebpackBar()],
+});

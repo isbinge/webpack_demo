@@ -9,9 +9,10 @@ module.exports = merge([
   {
     mode: 'development',
     node: false,
-    // externals: {
-    //   react: 'react',
-    // },
+    externals: {
+      react: 'React',
+      'react-dom': 'ReactDOM',
+    },
   },
   parts.generateSourceMap('cheap-module-eval-source-map'),
   parts.loadTypeScript({
@@ -56,7 +57,15 @@ module.exports = merge([
     },
     title: 'demo2',
     filename: 'index.html',
+    options: {
+      inject: true,
+      cdn: [
+        'https://unpkg.com/react@16.13.1/umd/react.development.js',
+        'https://unpkg.com/react-dom@16/umd/react-dom.development.js',
+      ],
+    },
   }),
   parts.useDll(),
+  parts.enableProgressBar(),
   parts.clean(),
 ]);
